@@ -2,6 +2,7 @@ import express from "express";
 import {matchRouter} from "./routes/matches.js";
 import http from "http";
 import {attachWebSocketServer} from "./ws/server.js";
+import {securityMiddleware} from "./aecjet.js";
 
 
 const app = express();
@@ -10,6 +11,7 @@ const HOST = process.env.HOST || '0.0.0.0';
 // Use JSON middleware
 app.use(express.json());
 const server = http.createServer(app);
+app.use(securityMiddleware(server));
 app.use('/matches', matchRouter);
 
 // Root GET route
