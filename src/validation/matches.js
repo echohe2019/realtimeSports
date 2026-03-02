@@ -13,15 +13,13 @@ export const listMatchesQuerySchema = z.object({
 export const matchIdParamsSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
-const isoDateString = z.string().refine((value) => !isNaN(Date.parse(value)));
-
 export const createMatchSchema = z
   .object({
     sport: z.string().trim().min(1, "Sport is required"),
     homeTeam: z.string().trim().min(1, "Home team is required"),
     awayTeam: z.string().trim().min(1, "Away team is required"),
-    startTime: isoDateString,
-    endTime: isoDateString,
+    startTime: z.iso.datetime(),
+    endTime: z.iso.datetime(),
     homeScore: z.coerce.number().int().nonnegative().optional().default(0),
     awayScore: z.coerce.number().int().nonnegative().optional().default(0),
   })
