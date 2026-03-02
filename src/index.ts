@@ -1,4 +1,6 @@
 import express from "express";
+import { db } from './db/config';
+
 
 const app = express();
 const PORT = 8000;
