@@ -19,10 +19,10 @@ export const attachWebSocketServer = (server)=>{
         path:'/ws',
         maxPayload:1024*1024,
     })
-    wss.on('connection', async (socket)=>{
+    wss.on('connection', async (socket,request)=>{
         if(wsArcjet){
             try{
-                const decision = await wsArcjet.protect(socket);
+                const decision = await wsArcjet.protect(request);
                 if(decision.isDenied()){
                     const code = decision.reason.isRateLimit()?1013:1008;
                     const reason = decision.reason.isRateLimit()?'Rate limit exceeded':'Access denied';
