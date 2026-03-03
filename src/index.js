@@ -1,30 +1,35 @@
 import express from "express";
-import {matchRouter} from "./routes/matches.js";
+import { matchRouter } from "./routes/matches.js";
+import { commentaryRouter } from "./routes/commentary.js";
 import http from "http";
-import {attachWebSocketServer} from "./ws/server.js";
-import {securityMiddleware} from "./aecjet.js";
-
+import { attachWebSocketServer } from "./ws/server.js";
 
 const app = express();
 const PORT = Number(process.env.PORT || 8000);
-const HOST = process.env.HOST || '0.0.0.0';
+const HOST = process.env.HOST || "0.0.0.0";
 // Use JSON middleware
 app.use(express.json());
 const server = http.createServer(app);
-app.use(securityMiddleware(server));
-app.use('/matches', matchRouter);
+// app.use(securityMiddleware(server));
+app.use("/matches", matchRouter);
+app.use("/matches", commentaryRouter);
 
 // Root GET route
-app.get('/', (req, res) => {
-    res.json({ message: 'Hello from Express TypeScript server!' });
+app.get("/", (req, res) => {
+  res.json({ message: "Hello from Express TypeScript server!" });
 });
 
-const {broadcastMatchCreated} = attachWebSocketServer(server);
+const { broadcastMatchCreated,broadcastCommentary } = attachWebSocketServer(server);
 app.locals.broadcastMatchCreated = broadcastMatchCreated;
+app.locals.broadcastCommentary = broadcastCommentary;
+
 
 // Start the server
-server.listen(PORT,HOST, () => {
-    const baseUrl = HOST ==='0.0.0.0'? `http://localhost:${PORT}`:`http://${HOST}:${PORT}`;
-    console.log(`Server is running at ${baseUrl}`);
-    console.log(`WebSocket server is running at ${baseUrl.replace('http','ws')}/ws`);
+server.listen(PORT, HOST, () => {
+  const baseUrl =
+    HOST === "0.0.0.0" ? `http://localhost:${PORT}` : `http://${HOST}:${PORT}`;
+  console.log(`Server is running at ${baseUrl}`);
+  console.log(
+    `WebSocket server is running at ${baseUrl.replace("http", "ws")}/ws`,
+  );
 });
