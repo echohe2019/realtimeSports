@@ -3,6 +3,8 @@ import { matchRouter } from "./routes/matches.js";
 import { commentaryRouter } from "./routes/commentary.js";
 import http from "http";
 import { attachWebSocketServer } from "./ws/server.js";
+import AgentAPI from "apminsight";
+AgentAPI.config();
 
 const app = express();
 const PORT = Number(process.env.PORT || 8000);
